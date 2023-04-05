@@ -5,7 +5,7 @@ const Users=()=>{
     const [users, setUsers] = useState(api.users.fetchAll())
     
     const handleDelete = (userId) => {
-        setUsers((prevState)=>prevState.filter((users)=>users!==userId))
+        setUsers((prev)=>prev.filter((users)=>users._id!==userId))
     }
 
     const renderPhrase = (number) => {
@@ -35,13 +35,13 @@ const Users=()=>{
                     {users.map((item)=>(
                         <tr key={item._id}>
                             <td>{item.name}</td>
-                            {item.qualities.map((id)=>(
-                                <td key={id._id} className={'mx-1 badge bg-'+id.color}>{id.name}</td>
+                            {item.qualities.map((qualities)=>(
+                                <td key={qualities._id} className={'mx-1 badge bg-'+qualities.color}>{qualities.name}</td>
                             ))}
                             <td key={item.profession._id}>{item.profession.name}</td>
                             <td>{item.completedMeetings}</td>
                             <td>{item.rate}/5</td>
-                            <td><button type="button" className="btn btn-danger" onClick={()=>handleDelete(item)}>delete</button></td>
+                            <td><button type="button" className="btn btn-danger" onClick={()=>handleDelete(item._id)}>delete</button></td>
                         </tr>
                     ))}                    
                 </tbody>
