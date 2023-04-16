@@ -1,26 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import api from '../api'
+import User from "./user";
+import SearchStatus from "./searchStatus";
 
-const Users=()=>{
+const Users = () => {
     const [users, setUsers] = useState(api.users.fetchAll())
-    
     const handleDelete = (userId) => {
         setUsers((prev)=>prev.filter((users)=>users._id!==userId))
     }
-
-    const renderPhrase = (number) => {
-        if ((number === 2) || (number === 3) || (number === 4)) {
-            return (<h1 className="badge bg-primary">{number} человека тусанет с тобой сегодня</h1>)
-        } else if (number === 0) {
-            return (<h1 className="badge bg-danger">никто с тобой не тусанет</h1>)
-        } else {
-            return (<h1 className="badge bg-primary">{number} человек тусанет с тобой сегодня</h1>)
-        }
+    const handleToggleBookMark = (userId) => {
+        setUsers((prev) => prev.map((user)=> user._id === userId ? {...user, bookmark: !user.bookmark} : user))
     }
-    return (
-        <>  
-            {renderPhrase(users.length)}      
-            <table className="table">
+    
+    return(
+        <> 
+            <SearchStatus length={users.length} />
+            {users.length > 0 && (
+                <table className="table">
                 <thead>
                     <tr>
                         <th scope="col">Имя</th>
@@ -28,26 +24,19 @@ const Users=()=>{
                         <th scope="col">Профессия</th>
                         <th scope="col">Встретился, раз</th>
                         <th scope="col">Оценка</th>
+                        <th scope="col">Избранное</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
-                <tbody>                   
-                    {users.map((item)=>(
-                        <tr key={item._id}>
-                            <td>{item.name}</td>
-                            {item.qualities.map((qualities)=>(
-                                <td key={qualities._id} className={'mx-1 badge bg-'+qualities.color}>{qualities.name}</td>
-                            ))}
-                            <td key={item.profession._id}>{item.profession.name}</td>
-                            <td>{item.completedMeetings}</td>
-                            <td>{item.rate}/5</td>
-                            <td><button type="button" className="btn btn-danger" onClick={()=>handleDelete(item._id)}>delete</button></td>
-                        </tr>
-                    ))}                    
+                <tbody>
+                {users.map((user)=>(
+                        <User key={user._id} onDelete={handleDelete} onBookMark={handleToggleBookMark} {...user} />
+                    ))}   
                 </tbody>
             </table>
-        </>
+            )}            
+        </>        
     )
-};
+}
 
-export default Users;
+export default Users
