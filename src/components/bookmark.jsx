@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Bookmark = ({ status, onBookmark, id }) => {
     return (
         <button onClick={() => onBookmark(id)}>
-            {status ? (<i className="bi bi-bookmark-fill"></i>) : (<i className="bi bi-bookmark"></i>)}
+            {status ? (<i className="bi bi-heart-fill"></i>) : (<i className="bi bi-heart"></i>)}
         </button>
     );
 };

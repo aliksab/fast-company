@@ -7,11 +7,16 @@ import GroupList from "./groupList";
 import { paginate } from "../utils/paginate";
 
 const Users = () => {
-    const [users, setUsers] = useState(api.users.fetchAll());
-    const [proffesions, setProffesions] = useState();
+    const [users, setUsers] = useState([]);
+    const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
+    useEffect(() => {
+        api.users.fetchAll().then((data) => {
+            setUsers(data);
+        });
+    }, []);
     const handleDelete = (userId) => {
         setUsers((prev) => prev.filter((users) => users._id !== userId));
         if (users.findIndex((user) => user._id === userId) <= (currentPage - 1) * pageSize) {
@@ -30,18 +35,18 @@ const Users = () => {
         );
     };
     useEffect(() => {
-        api.proffesions.fetchAll().then((data) => setProffesions(data));
+        api.professions.fetchAll().then((data) => setProfessions(data));
     }, []);
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
-    const handleProffesionSelected = item => {
+    const handleProfessionSelected = item => {
         setSelectedProf(item);
     };
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
-    const filteredUsers = selectedProf ? users.filter((user) => user.profession === selectedProf) : users;
+    const filteredUsers = selectedProf ? users.filter((user) => user.profession._id === selectedProf._id) : users;
     const count = filteredUsers.length;
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
     const clearFilter = () => {
@@ -49,9 +54,9 @@ const Users = () => {
     };
     return (
         <div className="d-flex">
-            {proffesions && (
+            {professions && (
                 <div className="d-flex flex-column flex-shrink-0 p-3">
-                    <GroupList selectedItem={selectedProf} items={proffesions} onItemSelect={handleProffesionSelected} />
+                    <GroupList selectedItem={selectedProf} items={professions} onItemSelect={handleProfessionSelected} />
                     <button className="btn btn-secondary mt-2" onClick={clearFilter}>Очистить</button>
                 </div>
             )}
