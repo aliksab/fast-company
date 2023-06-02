@@ -11,6 +11,7 @@ const Users = () => {
     const [users, setUsers] = useState([]);
     const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
+    const [searchUser, setSearchUser] = useState("");
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
@@ -42,14 +43,20 @@ const Users = () => {
     };
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, searchUser]);
     const handleProfessionSelected = item => {
+        setSearchUser("");
         setSelectedProf(item);
+    };
+    const handleSearch = ({ target }) => {
+        setSelectedProf(undefined);
+        setSearchUser(target.value);
     };
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
-    const filteredUsers = selectedProf ? users.filter((user) => user.profession._id === selectedProf._id) : users;
+    const filterUsers = selectedProf ? users.filter((user) => user.profession._id === selectedProf._id) : users;
+    const filteredUsers = searchUser ? users.filter(user => user.name.toLowerCase().includes(searchUser)) : filterUsers;
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
@@ -66,6 +73,7 @@ const Users = () => {
             )}
             <div className="d-flex flex-column w-100">
                 <SearchStatus length={count} />
+                <input type="text" onChange={handleSearch} placeholder="Search" className="form-control" value={searchUser} />
                 {count > 0 && (
                     <UserTable users={userCrop} onSort={handleSort} selectedSort={sortBy} onDelete={handleDelete} onBookMark={handleToggleBookMark} />
                 )}
