@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import Table from "./table";
-import Bookmark from "./bookmark";
-import QualitieList from "./qulitiesList";
+import Table from "../common/table/table";
+import Bookmark from "../common/bookmark";
+import Qualities from "./qulities/qulitiesList";
 
 const UserTable = ({ users, selectedSort, onSort, onDelete, onBookMark }) => {
     const columns = {
         name: { path: "name", name: "Имя", component: (user) => <Link to={`/users/${user._id}`}>{user.name}</Link> },
-        qualities: { name: "Качества", component: (user) => (<QualitieList qualities={user.qualities} />) },
+        qualities: { name: "Качества", component: (user) => (<Qualities qualities={user.qualities} />) },
         professions: { path: "profession.name", name: "Профессия" },
         completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
         rate: { path: "rate", name: "Оценка" },

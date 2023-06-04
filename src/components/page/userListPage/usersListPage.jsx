@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import api from "../api";
-import SearchStatus from "./searchStatus";
-import Pagination from "./pagination";
-import GroupList from "./groupList";
-import { paginate } from "../utils/paginate";
-import UserTable from "./usersTable";
+import api from "../../../api";
+import SearchStatus from "../../ui/searchStatus";
+import Pagination from "../../common/pagination";
+import GroupList from "../../common/groupList";
+import { paginate } from "../../../utils/paginate";
+import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 
-const Users = () => {
+const UsersListPage = () => {
     const [users, setUsers] = useState([]);
     const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
@@ -90,4 +90,4 @@ const Users = () => {
     );
 };
 
-export default Users;
+export default UsersListPage;

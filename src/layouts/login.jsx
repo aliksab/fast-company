@@ -1,62 +1,20 @@
-import React, { useEffect, useState } from "react";
-import TextField from "../components/textField";
-import { validator } from "../utils/validator";
+import React, { useState } from "react";
+import LoginForm from "../components/ui/loginForm";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router";
+import RegisterForm from "../components/ui/registerForm";
 
 const Login = () => {
-    const [data, setData] = useState({ email: "", password: "" });
-    const [errors, SetErrors] = useState({});
-    const handleChange = ({ target }) => {
-        setData((prev) => ({ ...prev, [target.name]: target.value }));
+    const { type } = useParams();
+    const [formType, setFormType] = useState(type === "register" ? type : "login");
+    const toggleFormType = (params) => {
+        setFormType(prev => prev === "register" ? "login" : "register");
     };
-    const validatorConfig = {
-        email: {
-            isRequired: {
-                message: "Электронная почта обязательна для заполнения"
-            },
-            isEmail: {
-                message: "Email введён некорректно"
-            }
-        },
-        password: {
-            isRequired: {
-                message: "Пароль обязателен для заполнения"
-            },
-            isCapitalSymbol: {
-                message: "Пароль должен содержать как минимум одну заглавную букву"
-            },
-            isContainDigit: {
-                message: "Пароль должен содержать как минимум одну цифру"
-            },
-            min: {
-                message: "Пароль должен содержать как минимум 8 символов",
-                value: 8
-            }
-        }
-    };
-    useEffect(() => {
-        validate();
-    }, [data]);
-    const validate = () => {
-        const errors = validator(data, validatorConfig);
-        SetErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
-    const isValid = Object.keys(errors).length === 0;
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const isValid = validate();
-        if (!isValid) return;
-        console.log(data);
-    };
+
     return (
         <div className="container mt-5">
             <div className="row col-md-6 offset-md-3 shadow p-4">
-                <h3 className="mb-4">Login</h3>
-                <form onSubmit={handleSubmit}>
-                    <TextField label="Электронная почта" type="text" name="email" value={data.email} onChange={handleChange} error={errors.email} />
-                    <TextField label="Пароль" type="password" name="password" value={data.password} onChange={handleChange} error={errors.password} />
-                    <button type="submit" disabled={!isValid} className="btn btn-primary w-100 mx-auto">Submit</button>
-                </form>
+                {formType === "register" ? <><h3 className="mb-4">Register</h3><RegisterForm /><p>Alreadu have account? <Link role="button" onClick={toggleFormType} to={`/login`}>Sign In</Link></p></> : <><h3 className="mb-4">Login</h3><LoginForm /><p>Dont have account? <Link role="button" onClick={toggleFormType} to={`/login/register`}>Sign Up</Link></p></>}
             </div>
         </div>
     );

@@ -3,9 +3,15 @@ import PropTypes from "prop-types";
 
 const Qualitie = ({ _id, color, name }) => {
     return (
-        <td key={_id} className={"mx-1 badge bg-" + color}>
-            {name}
-        </td>
+        <table>
+            <tbody>
+                <tr>
+                    <td key={_id} className={"mx-1 badge bg-" + color}>
+                        {name}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     );
 };
 
