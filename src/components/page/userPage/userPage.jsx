@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import Qualities from "../../ui/qulities/qulitiesList";
+import UserCard from "../../ui/userCard";
+import QualitiesCard from "../../ui/qualitiesCard";
+import MeetingCard from "../../ui/meetingCard";
 
 const UserPage = ({ id }) => {
-  const [userById, setUserById] = useState(null);
-  const history = useHistory();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    api.users.getById(id).then(data => setUserById(data));
-  }, [id]);
-
-  return (
-    userById ? <div className="mx-4"><h1>{userById.name}</h1><h2>Профессия: {userById.profession.name}</h2><Qualities qualities={userById.qualities}/><h2>completedMeetings: {userById.completedMeetings}</h2><h2>Rate: {userById.rate}</h2><button onClick={() => history.push(`/users/${id}/edit`)}>Изменить</button></div> : <div>Loading...</div>
-  );
+    api.users.getById(id).then(data => setUser(data));
+  }, []);
+  if (user) {
+    return (
+      <div className="container">
+        <div className="row gutters-sm">
+          <div className="col-md-4 mb-3">
+            <UserCard user={user} />
+            <QualitiesCard data={user.qualities}/>
+            <MeetingCard value={user.completedMeetings} />
+          </div>
+        </div>
+      </div>
+    );
+  } else {
+    return <h1>Loading</h1>;
+  }
 };
 
 UserPage.propTypes = {
