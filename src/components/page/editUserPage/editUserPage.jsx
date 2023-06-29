@@ -6,6 +6,7 @@ import api from "../../../api";
 import SelectField from "../../common/form/selectField";
 import RadioFeld from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
+import BackHistoryButton from "../../common/backButton";
 
 const EditUserPage = () => {
   const [data, setData] = useState({ name: "", email: "", profession: "", sex: "male", qualities: [], licence: false });
@@ -107,6 +108,7 @@ const EditUserPage = () => {
     };
     return (
       <div className="container mt-5">
+        <BackHistoryButton />
         <div className="row col-md-6 offset-md-3 shadow p-4">
           {!loading && Object.keys(professions).length > 0 ? <form onSubmit={handleSubmit}>
                 <TextField label="Имя" name="name" value={data.name} onChange={handleChange} error={errors.name} />

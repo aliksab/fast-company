@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import UserCard from "../../ui/userCard";
 import QualitiesCard from "../../ui/qualitiesCard";
 import MeetingCard from "../../ui/meetingCard";
+import Comments from "../../ui/comments";
 
 const UserPage = ({ id }) => {
   const [user, setUser] = useState(null);
@@ -19,6 +20,9 @@ const UserPage = ({ id }) => {
             <UserCard user={user} />
             <QualitiesCard data={user.qualities}/>
             <MeetingCard value={user.completedMeetings} />
+          </div>
+          <div className="col-md-8">
+            <Comments />
           </div>
         </div>
       </div>

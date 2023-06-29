@@ -9,7 +9,7 @@ const QualitiesCard = ({ data }) => {
                 <h5 className="card-title">
                     <span>Качества</span>
                 </h5>
-                <p className="card-text d-flex justify-content-center;">
+                <p className="card-text d-flex justify-content-center">
                     <Qualities qualities={data} />
                 </p>
             </div>
