@@ -6,23 +6,23 @@ import GroupList from "../../common/groupList";
 import { paginate } from "../../../utils/paginate";
 import UserTable from "../../ui/usersTable";
 import _ from "lodash";
+import { useUser } from "../../../hooks/useUsers";
 
 const UsersListPage = () => {
-    const [users, setUsers] = useState([]);
     const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [searchUser, setSearchUser] = useState("");
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
+
+    const { users } = useUser();
     useEffect(() => {
-        api.users.fetchAll().then((data) => {
-            setUsers(data);
-            api.professions.fetchAll().then((data) => setProfessions(data));
-        });
-    }, []);
+        api.professions.fetchAll().then((data) => setProfessions(data));
+        }, []);
     const handleDelete = (userId) => {
-        setUsers((prev) => prev.filter((users) => users._id !== userId));
+        // setUsers((prev) => prev.filter((users) => users._id !== userId));
+        console.log(userId);
         if (users.findIndex((user) => user._id === userId) <= (currentPage - 1) * pageSize) {
             if ((users.length - 1) <= (currentPage - 1) * pageSize) {
                 setCurrentPage(currentPage - 1);
@@ -30,13 +30,13 @@ const UsersListPage = () => {
         };
     };
     const handleToggleBookMark = (userId) => {
-        setUsers((prev) =>
-            prev.map((user) =>
-                user._id === userId
-                    ? { ...user, bookmark: !user.bookmark }
-                    : user
-            )
-        );
+        const newArray = users.map((user) => {
+            if (user._id === userId) {
+                return { ...user, bookmark: !user.bookmark };
+            }
+            return user;
+        });
+        console.log(newArray);
     };
     const handleSort = (item) => {
         setSortBy(item);
