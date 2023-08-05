@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import api from "../../../api";
 import SearchStatus from "../../ui/searchStatus";
 import Pagination from "../../common/pagination";
 import GroupList from "../../common/groupList";
@@ -7,22 +6,20 @@ import { paginate } from "../../../utils/paginate";
 import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 import { useUser } from "../../../hooks/useUsers";
+import { useProfessions } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 
 const UsersListPage = () => {
-    const [professions, setProfessions] = useState();
+    const { users } = useUser();
+    const { currentUser } = useAuth();
+    const { isLoading: professionsLoading, professions } = useProfessions();
     const [selectedProf, setSelectedProf] = useState();
     const [searchUser, setSearchUser] = useState("");
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
 
-    const { users } = useUser();
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfessions(data));
-        }, []);
     const handleDelete = (userId) => {
-        // setUsers((prev) => prev.filter((users) => users._id !== userId));
-        console.log(userId);
         if (users.findIndex((user) => user._id === userId) <= (currentPage - 1) * pageSize) {
             if ((users.length - 1) <= (currentPage - 1) * pageSize) {
                 setCurrentPage(currentPage - 1);
@@ -56,7 +53,11 @@ const UsersListPage = () => {
         setCurrentPage(pageIndex);
     };
     const filterUsers = selectedProf ? users.filter((user) => user.profession._id === selectedProf._id) : users;
-    const filteredUsers = searchUser ? users.filter(user => user.name.toLowerCase().includes(searchUser)) : filterUsers;
+    function filtersUsers(data) {
+        const filteredUsers = searchUser ? data.filter(user => user.name.toLowerCase().includes(searchUser)) : filterUsers;
+        return filteredUsers.filter((u) => u._id !== currentUser._id);
+    }
+    const filteredUsers = filtersUsers(users);
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
@@ -65,7 +66,7 @@ const UsersListPage = () => {
     };
     return (
         <div className="d-flex">
-            {professions && (
+            {professions && !professionsLoading && (
                 <div className="d-flex flex-column flex-shrink-0 p-3">
                     <GroupList selectedItem={selectedProf} items={professions} onItemSelect={handleProfessionSelected} />
                     <button className="btn btn-secondary mt-2" onClick={clearFilter}>Очистить</button>

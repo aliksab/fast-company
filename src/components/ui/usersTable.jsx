@@ -6,7 +6,7 @@ import Bookmark from "../common/bookmark";
 import Qualities from "./qulities/qulitiesList";
 import Profession from "./profession";
 
-const UserTable = ({ users, selectedSort, onSort, onDelete, onBookMark }) => {
+const UserTable = ({ users, selectedSort, onSort, onBookMark }) => {
     const columns = {
         name: { path: "name", name: "Имя", component: (user) => <Link to={`/users/${user._id}`}>{user.name}</Link> },
         qualities: { name: "Качества", component: (user) => (<Qualities qualities={user.qualities} />) },
@@ -23,17 +23,6 @@ const UserTable = ({ users, selectedSort, onSort, onDelete, onBookMark }) => {
                     status={user.bookmark}
                 />
             )
-        },
-        delete: {
-            component: (user) => (
-                <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={() => onDelete(user._id)}
-                >
-                    delete
-                </button>
-            )
         }
     };
 
@@ -46,7 +35,6 @@ UserTable.propTypes = {
     users: PropTypes.array.isRequired,
     onSort: PropTypes.func.isRequired,
     selectedSort: PropTypes.object.isRequired,
-    onDelete: PropTypes.func.isRequired,
     onBookMark: PropTypes.func.isRequired
 };
 

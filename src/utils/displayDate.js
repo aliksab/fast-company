@@ -14,7 +14,7 @@ export function displayDate(data) {
                     return "10 минут назад";
                 } return "30 минут назад";
             }
-            return `${date.getHours()}:${date.getMinutes}`;
+            return `${date.getHours()}:${date.getMinutes()}`;
         }
         return `${date.getDay()} ${date.toLocaleString("default", { month: "long" })}`;
     }

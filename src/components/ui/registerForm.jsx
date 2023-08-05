@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
     const history = useHistory();
-    const [data, setData] = useState({ email: "", password: "", profession: "", sex: "male", qualities: [] });
+    const [data, setData] = useState({ email: "", password: "", profession: "", sex: "male", name: "", qualities: [] });
     const { signUp } = useAuth();
     const { quality } = useQuality();
     const qualitiesList = quality.map((q) => ({ label: q.name, value: q._id }));
@@ -29,6 +29,15 @@ const RegisterForm = () => {
             },
             isEmail: {
                 message: "Email введён некорректно"
+            }
+        },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения"
+            },
+            min: {
+                message: "Имя должно содержать как минимум 3 символов",
+                value: 3
             }
         },
         password: {
@@ -81,6 +90,7 @@ const RegisterForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <TextField label="Электронная почта" type="text" name="email" value={data.email} onChange={handleChange} error={errors.email} />
+            <TextField label="Имя" type="text" name="name" value={data.name} onChange={handleChange} error={errors.name} />
             <TextField label="Пароль" type="password" name="password" value={data.password} onChange={handleChange} error={errors.password} />
             <SelectField label="Выбери профессию" name="profession" defaultOption="Choose.." options={professionsList} onChange={handleChange} value={data.profession} error={errors.profession} />
             <RadioFeld label="Выберите Ваш пол" options={[{ name: "Male", value: "male" }, { name: "Female", value: "Female" }]} value={data.sex} name="sex" onChange={handleChange} />
