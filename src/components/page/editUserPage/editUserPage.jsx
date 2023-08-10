@@ -14,7 +14,7 @@ import { useAuth } from "../../../hooks/useAuth";
 const EditUserPage = () => {
   const { updateUser, currentUser } = useAuth();
   const history = useHistory();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { professions, isLoading: profIsLoading } = useProfessions();
   const { quality, isLoading: qualIsLoading } = useQuality();
   const [errors, setErrors] = useState({});
