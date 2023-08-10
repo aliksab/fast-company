@@ -22,7 +22,7 @@ const userService = {
     },
     update: async (payload) => {
         const { data } = await httpService.patch(userEndpoint + localStorageService.getUserID(), payload);
-        console.log(data);
+        return data;
     }
 };
 
