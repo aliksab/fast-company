@@ -17,7 +17,6 @@ const UserProvider = ({ children }) => {
     const [error, setError] = useState(null);
     useEffect(() => {
         getUser();
-        console.log(currentUser);
     }, []);
     useEffect(() => {
         if (error !== null) {
@@ -47,7 +46,6 @@ const UserProvider = ({ children }) => {
             const newUsers = [...users];
             const indexUser = users.findIndex(u => u._id === currentUser._id);
             newUsers[indexUser] = currentUser;
-            console.log(newUsers[indexUser]);
             setUsers(newUsers);
         }
     }, [currentUser]);

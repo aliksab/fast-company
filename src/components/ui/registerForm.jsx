@@ -5,18 +5,19 @@ import SelectField from "../common/form/selectField";
 import RadioFeld from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkField";
-import { useQuality } from "../../hooks/useQuality";
-import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getQuality } from "../../store/qualities";
+import { getProfessions } from "../../store/professions";
 
 const RegisterForm = () => {
     const history = useHistory();
     const [data, setData] = useState({ email: "", password: "", profession: "", sex: "male", name: "", qualities: [] });
     const { signUp } = useAuth();
-    const { quality } = useQuality();
+    const quality = useSelector(getQuality());
     const qualitiesList = quality.map((q) => ({ label: q.name, value: q._id }));
-    const { professions } = useProfessions();
+    const professions = useSelector(getProfessions());
     const professionsList = professions.map((p) => ({ label: p.name, value: p._id }));
     const [errors, SetErrors] = useState({});
     const handleChange = (target) => {

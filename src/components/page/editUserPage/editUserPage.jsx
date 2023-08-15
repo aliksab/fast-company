@@ -2,21 +2,23 @@ import React, { useEffect, useState } from "react";
 import TextField from "../../common/form/textField";
 import { validator } from "../../../utils/validator";
 import { useHistory } from "react-router-dom";
-// import api from "../../../api";
 import SelectField from "../../common/form/selectField";
 import RadioFeld from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
-import { useProfessions } from "../../../hooks/useProfession";
-import { useQuality } from "../../../hooks/useQuality";
 import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getQuality, getQualitiesLoadingStatus } from "../../../store/qualities";
+import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions";
 
 const EditUserPage = () => {
   const { updateUser, currentUser } = useAuth();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const { professions, isLoading: profIsLoading } = useProfessions();
-  const { quality, isLoading: qualIsLoading } = useQuality();
+  const professions = useSelector(getProfessions());
+  const professionsLoading = useSelector(getProfessionsLoadingStatus());
+  const quality = useSelector(getQuality());
+  const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
   const [errors, setErrors] = useState({});
   const [data, setData] = useState({ name: currentUser.name, email: currentUser.email, profession: currentUser.profession, sex: "male", licence: false });
   const professionsList = professions.map(prof => ({ label: prof.name, value: prof._id }));
@@ -34,7 +36,7 @@ const EditUserPage = () => {
     return qualitiesArray;
   };
   useEffect(() => {
-    if (!profIsLoading && !qualIsLoading && currentUser) {
+    if (!professionsLoading && !qualitiesLoading && currentUser) {
       setData({
         ...currentUser,
         qualities: getQualities(currentUser.qualities).map(qual => ({
@@ -43,7 +45,7 @@ const EditUserPage = () => {
         }))
       });
     }
-  }, [profIsLoading, qualIsLoading, currentUser]);
+  }, [professionsLoading, qualitiesLoading, currentUser]);
   useEffect(() => {
     if (data._id) {
       setLoading(false);
