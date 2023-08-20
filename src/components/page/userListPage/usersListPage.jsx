@@ -5,14 +5,13 @@ import GroupList from "../../common/groupList";
 import { paginate } from "../../../utils/paginate";
 import UserTable from "../../ui/usersTable";
 import _ from "lodash";
-import { useUser } from "../../../hooks/useUsers";
-import { useAuth } from "../../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions";
+import { getCurrentUserId, getUsersList } from "../../../store/users";
 
 const UsersListPage = () => {
-    const { users } = useUser();
-    const { currentUser } = useAuth();
+    const users = useSelector(getUsersList());
+    const currentUserId = useSelector(getCurrentUserId());
     const professions = useSelector(getProfessions());
     const professionsLoading = useSelector(getProfessionsLoadingStatus());
     const [selectedProf, setSelectedProf] = useState();
@@ -57,7 +56,7 @@ const UsersListPage = () => {
     const filterUsers = selectedProf ? users.filter((user) => user.profession._id === selectedProf._id) : users;
     function filtersUsers(data) {
         const filteredUsers = searchUser ? data.filter(user => user.name.toLowerCase().includes(searchUser)) : filterUsers;
-        return filteredUsers.filter((u) => u._id !== currentUser._id);
+        return filteredUsers.filter((u) => u._id !== currentUserId);
     }
     const filteredUsers = filtersUsers(users);
     const count = filteredUsers.length;
