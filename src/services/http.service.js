@@ -13,11 +13,9 @@ http.interceptors.request.use(
         if (configFile.isFireBase) {
             const containSlash = /\/$/.test(config.url);
             config.url = (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
-            // const url = `https://securetoken.googleapis.com/v1/token?key=${process.env.REACT_APP_FIREBASE_KEY}`;
             const expiresDate = localStorageService.getExpiresDate();
             const refreshToken = localStorageService.getRefreshToken();
             if (refreshToken && expiresDate < Date.now()) {
-                // const data = await httpAuth.post(url, { grant_type: "refresh_token", refresh_token: refreshToken });
                 const data = await authService.refresh();
                 localStorageService.setTokens({
                     refreshToken: data.refresh_token, idToken: data.id_token, expiresIn: data.expires_in, localId: data.user_id

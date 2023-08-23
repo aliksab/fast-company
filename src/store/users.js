@@ -4,6 +4,7 @@ import authService from "../services/auth.service";
 import localStorageService from "../services/localStorage.service";
 import getRandomInt from "../utils/getRandomInt";
 import history from "../utils/history";
+import { generateAuthError } from "../utils/generateAuthError";
 const initialState = localStorageService.getAccesToken() ? {
     entities: null,
     isLoading: true,
@@ -37,6 +38,7 @@ const usersSlice = createSlice({
         },
         authRequestSuccess: (state, action) => {
             state.auth = action.payload;
+            state.error = null;
             state.isLoggedIn = true;
         },
         authRequestFailed: (state, action) => {
@@ -54,7 +56,7 @@ const usersSlice = createSlice({
             state.auth = null;
             state.dataLoaded = false;
         },
-        userUpdate(state, action) {
+        userUpdate: (state, action) => {
             state.entities[
                 state.entities.findIndex(u => u._id === action.payload._id)
             ] = action.payload;
@@ -77,7 +79,13 @@ export const login = ({ payload, redirect }) => async dispatch => {
         localStorageService.setTokens(data);
         history.push(redirect);
     } catch (error) {
-        dispatch(authRequestFailed(error.message));
+        const { code, message } = error.response.data.error;
+        if (code === 400) {
+            const errorMessage = generateAuthError(message);
+            dispatch(authRequestFailed(errorMessage));
+        } else {
+            dispatch(authRequestFailed(error.message));
+        }
     }
 };
 export const loadUsersList = () => async (dispatch, getState) => {
@@ -153,5 +161,6 @@ export const getDataStatus = () => state => state.users.dataLoaded;
 export const getUsersLoadingStatus = () => state => state.users.isLoading;
 export const getIsLoggedIn = () => state => state.users.isLoggedIn;
 export const getCurrentUserId = () => state => state.users.auth.userId;
+export const getAuthError = () => state => state.users.error;
 
 export default usersReducer;
